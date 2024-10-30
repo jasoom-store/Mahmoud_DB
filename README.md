@@ -1,3 +1,7 @@
+## venv
+py -m venv .venv <!-- to create venv -->
+.venv\Scripts\activate
+
 ## Use Git
 gh auth login
 gh repo clone jasoom-store/Mahmoud_DB
