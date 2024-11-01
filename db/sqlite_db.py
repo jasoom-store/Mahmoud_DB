@@ -1,6 +1,5 @@
 import sqlite3
 
-
 class SQLITE_DB:
     def __init__(self, database : dict):
         self.__con = sqlite3.connect(database["path"])
@@ -13,7 +12,7 @@ class SQLITE_DB:
         self.commit()
         return self.close()
 
-    def table_exists(self, table_name):
+    def table_exists(self, table_name : str):
         table_exists = self.__cur.execute(
             f'SELECT name FROM sqlite_master WHERE type="table" AND name="{ table_name }"'
         )
@@ -25,7 +24,7 @@ class SQLITE_DB:
                 return True
         return False  
 
-    def create_table(self, table_name, columes : list):
+    def create_table(self, table_name : str, columes : list):
         try:
             # primary_key = False
             # auto_inc = False
@@ -34,8 +33,8 @@ class SQLITE_DB:
             for colume in columes:
                 sql += '"'+ colume["n"] +'" '+ colume["t"]
                 sql += ' NULL' if colume["l"] else ' NOT NULL'
-                sql += '  PRIMARY KEY' if colume["pk"] else ''
-                sql += '  AUTOINCREMENT' if colume["au"] else ''
+                sql += ' PRIMARY KEY' if colume["pk"] else ''
+                sql += ' AUTOINCREMENT' if colume["au"] else ''
                 sql += ', '
                 # if colume['pk']:
                 #     primary_key = colume["n"]
@@ -56,7 +55,7 @@ class SQLITE_DB:
         except:
             return 'This table is exists.'
 
-    def delete_table(self, table_name):
+    def delete_table(self, table_name : str):
         try:
             self.__cur.execute(f'DROP TABLE { table_name }')
             if not self.table_exists(table_name):
@@ -65,14 +64,15 @@ class SQLITE_DB:
         except:
             return 'This table is not exists.'
     
-    def delete_all_data(self, table_name):
+    def delete_data(self, table_name : str, where : str):
         if self.table_exists(table_name):
-            self.__cur.execute(f'DELETE FROM TABLE { table_name }')
+            sql = f'DELETE FROM TABLE { table_name }'
+            sql += f' WHERE { where }' if len(where) > 0 else ''
+            self.__cur.execute(sql)
             return True
         return False
 
-    # INSERT INTO 'langs' ('lang_id', 'lang_name') VALUES (1, 'Arabic')
-    def add_data(self, table_name, data : dict):
+    def add_data(self, table_name : str, data : dict):
         sql = f'INSERT INTO "{ table_name }" ('
         for colume in data:
             if type(data[colume]) == str or type(data[colume]) == int:
@@ -89,8 +89,4 @@ class SQLITE_DB:
 
         self.__cur.execute(sql)
         self.__con.commit()
-        
-        # return sql
-
-
 
