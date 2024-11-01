@@ -65,7 +65,7 @@ class SQLITE_DB:
         except:
             return 'This table isn\'t exists.'
     
-    def delete_data(self, table_name : str, where : str):
+    def delete_data(self, table_name : str, where = '' : str):
         if self.table_exists(table_name):
             sql = f'DELETE FROM TABLE { table_name }'
             sql += f' WHERE { where }' if len(where) > 0 else ''
