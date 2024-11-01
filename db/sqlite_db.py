@@ -15,16 +15,15 @@ class SQLITE_DB:
         return self.close()
 
     def table_exists(self, table_name : str):
-        table_exists = self.__cur.execute(
-            f'SELECT name FROM sqlite_master WHERE type="table" AND name="{ table_name }"'
-        )
-
+        sql = 'SELECT name FROM sqlite_master WHERE '
+        sql += f'type="table" AND name="{ table_name }"'
+        
+        table_exists = self.__cur.execute(sql)
         tuple_data = table_exists.fetchone()
 
-        if type(tuple_data) == tuple:
-            if table_name in tuple_data:
-                return True
-        return False  
+        if type(tuple_data) == tuple and table_name in tuple_data:
+            return True
+        return False
 
     def create_table(self, table_name : str, columes : list):
         try:
@@ -64,7 +63,7 @@ class SQLITE_DB:
                 return True
             return False
         except:
-            return 'This table is not exists.'
+            return 'This table isn\'t exists.'
     
     def delete_data(self, table_name : str, where : str):
         if self.table_exists(table_name):
