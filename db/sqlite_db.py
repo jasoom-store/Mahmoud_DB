@@ -29,6 +29,13 @@ class SQLITE_DB:
         try:
             # primary_key = False
             # auto_inc = False
+            
+            items = ["n", "t", "l", "pk", "au"]
+            for colume in columes:
+                if type(colume) != dict:
+                    for l in items:
+                        if not l in colume:
+                            return False
 
             sql = f'CREATE TABLE "{ table_name }" ('
             for colume in columes:
@@ -58,36 +65,135 @@ class SQLITE_DB:
 
     def delete_table(self, table_name : str):
         try:
-            self.__cur.execute(f'DROP TABLE { table_name }')
+            self.__cur.execute(f'DROP TABLE "{ table_name }"')
             if not self.table_exists(table_name):
                 return True
             return False
         except:
             return 'This table isn\'t exists.'
     
-    def delete_data(self, table_name : str, where = '' : str):
+    def delete_data(self, table_name : str, where : str = ''):
         if self.table_exists(table_name):
-            sql = f'DELETE FROM TABLE { table_name }'
-            sql += f' WHERE { where }' if len(where) > 0 else ''
+            sql = f'DELETE FROM TABLE "{ table_name }"'
+            sql += f' WHERE { where }' if where != '' else ''
             self.__cur.execute(sql)
+
+            try:
+                if where == '':
+                    sql_2 = 'DELETE FROM TABLE sqlite_sequence'
+                    sql_2 += f' WHERE name = "{ table_name }"'
+                    self.__cur.execute(sql_2)
+            except:
+                pass
             return True
         return False
 
     def add_data(self, table_name : str, data : dict):
-        sql = f'INSERT INTO "{ table_name }" ('
-        for colume in data:
-            if type(data[colume]) == str or type(data[colume]) == int:
-                sql += '`'+ colume +'`, '
-        sql = sql[:-2]
-        sql += ') VALUES ('
-        for colume in data:
-            if type(data[colume]) == str:
-                sql += f"'{ data[colume] }', "
-            elif type(data[colume]) == int:
-                sql += f'{ str(data[colume]) }, '
-        sql = sql[:-2]
-        sql += ')'
+        try:
+            sql = f'INSERT INTO "{ table_name }" ('
 
-        self.__cur.execute(sql)
-        self.__con.commit()
+            for colume in data:
+                if type(data[colume]) == str or type(data[colume]) == int:
+                    sql += '`'+ colume +'`, '
+            sql = sql[:-2]
 
+            sql += ') VALUES ('
+
+            for colume in data:
+                if type(data[colume]) == str:
+                    sql += f"'{ data[colume] }', "
+                elif type(data[colume]) == int:
+                    sql += f'{ str(data[colume]) }, '
+            sql = sql[:-2]
+            
+            sql += ')'
+
+            self.__cur.execute(sql)
+            self.__con.commit()
+            
+            return True
+        except:
+            return False
+    
+    def update_data(self, table_name : str, data : dict, pk : str, value_pk : str):
+        try:
+            sql = f'UPDATE "{table_name}" SET '
+            for colume in data:
+                if type(data[colume]) == str or type(data[colume]) == int:
+                    sql += f'"{colume}" = ' 
+                if type(data[colume]) == str :
+                    sql+= f'"{data[colume]}", '
+                else:
+                    sql+= f'{data[colume]} , '
+                        
+            sql = sql[:-2]  
+            sql += f' WHERE "{pk}" = '
+            if type(value_pk) == str:
+                sql += f'"{ value_pk }"'
+            elif type(value_pk) == int:
+                sql += f'{ str(value_pk) }'
+
+            self.__cur.execute(sql)
+            self.__con.commit()
+            
+            return True
+        except:
+            return False
+
+    def get_data(self, table_name : str, where : str = '', limit : int = 0):
+        sql = f'SELECT * FROM "{ table_name }"'
+        sql += f' WHERE { where }' if where != '' else ''
+        sql += f' LIMIT { str(limit) }' if limit != 0 else ''
+
+        data = self.__cur.execute(sql)
+        # return data.fetchall()
+        # return data.description
+        
+        # [
+        #     {
+        #         'lang_id': 1,
+        #         'lang_name': 'Arabic',
+        #     },
+        #     {
+        #         'lang_id': 2,
+        #         'lang_name': 'English',
+        #     },
+        # ]
+
+        # Convert list of tuple to list of dict
+        col_names = data.description
+        list_of_data = []
+        
+        for d in data.fetchall():
+            obj = {}
+            # list_of_data = ind
+            for ind, val in enumerate(d):
+                obj[col_names[ind][0]] = val
+            list_of_data.append(obj)
+
+        return list_of_data
+
+    def get_data_by_pk(self, table_name : str, pk : str, pk_val : int):
+        sql = f'SELECT * FROM "{ table_name }"'
+        sql += f' WHERE "{ pk }" = { pk_val }'
+
+        data = self.__cur.execute(sql)
+        # return data.fetchall()
+        # return data.description
+    
+        # {
+        #     'lang_id': 1,
+        #     'lang_name': 'Arabic',
+        # }
+
+        # Convert tuple to dict
+        col_names = data.description
+        
+        obj = {}
+        for ind, val in enumerate(data.fetchone()):
+            obj[col_names[ind][0]] = val
+
+        return obj
+
+
+  

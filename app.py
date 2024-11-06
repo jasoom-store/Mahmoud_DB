@@ -7,36 +7,45 @@ SQL = SQLITE_DB({
 
 print('=' * 30)
 
-print(SQL.delete_table('langs'))
+# print(SQL.delete_table('langs'))
 
-print(SQL.create_table('langs', [
-    {
-        'n': 'lang_id',
-        't': 'INTEGER',
-        'l': False,
-        'pk': True,
-        'au': True
-    },
-    {
-        'n': 'lang_name',
-        't': 'TEXT',
-        'l': False,
-        'pk': False,
-        'au': False
-    },
-]))
+# print(SQL.create_table('langs', [
+#     {
+#         'n': 'lang_id',
+#         't': 'INTEGER',
+#         'l': False,
+#         'pk': True,
+#         'au': True
+#     },
+#     {
+#         'n': 'lang_name',
+#         't': 'TEXT',
+#         'l': False,
+#         'pk': False,
+#         'au': False
+#     },
+# ]))
 
-print(SQL.add_data('langs', {
-    # 'lang_id': 1,
-    'lang_name': 'Arabic',
-}))
+# print(SQL.add_data('langs', {
+#     # 'lang_id': 1,
+#     'lang_name': 'Arabic',
+# }))
 
-print(SQL.add_data('langs', {
-    'lang_id': 3,
-    'lang_name': 'Frensh',
-}))
+# print(SQL.add_data('langs', {
+#     'lang_id': 3,
+#     'lang_name': 'Frensh',
+# }))
 
-print(SQL.add_data('langs', {
-    'lang_id': 2,
-    'lang_name': 'English',
-}))
+# print(SQL.add_data('langs', {
+#     'lang_id': 2,
+#     'lang_name': 'English',
+# }))
+
+# print(SQL.update_data('langs', {
+#     'lang_name': 'English',
+# }, 'lang_id', 2))
+
+print(SQL.get_data('langs'))
+
+# print(SQL.get_data_by_pk('langs', 'lang_id', 1))
+
