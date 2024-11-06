@@ -5,15 +5,6 @@ class SQLITE_DB:
         self.__con = sqlite3.connect(database["path"])
         self.__cur = self.__con.cursor()
 
-    # HERE AN ERROR
-    def commit(self):
-        return self.commit()
-
-    # HERE AN ERROR
-    def commit_and_close(self):
-        self.commit()
-        return self.close()
-
     def table_exists(self, table_name : str):
         sql = 'SELECT name FROM sqlite_master WHERE '
         sql += f'type="table" AND name="{ table_name }"'
