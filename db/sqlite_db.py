@@ -1,11 +1,11 @@
 import sqlite3
 
 class SQLITE_DB:
-    def __init__(self, database : dict):
+    def __init__(self, database : dict) -> None:
         self.__con = sqlite3.connect(database["path"])
         self.__cur = self.__con.cursor()
 
-    def table_exists(self, table_name : str):
+    def table_exists(self, table_name : str) -> bool:
         sql = 'SELECT name FROM sqlite_master WHERE '
         sql += f'type="table" AND name="{ table_name }"'
         
@@ -63,23 +63,25 @@ class SQLITE_DB:
         except:
             return 'This table isn\'t exists.'
     
-    def delete_data(self, table_name : str, where : str = ''):
+    def delete_data(self, table_name : str, where : str = '') -> bool:
         if self.table_exists(table_name):
-            sql = f'DELETE FROM TABLE "{ table_name }"'
+            sql = f'DELETE FROM "{ table_name }"'
             sql += f' WHERE { where }' if where != '' else ''
             self.__cur.execute(sql)
+            self.__con.commit()
 
             try:
                 if where == '':
                     sql_2 = 'DELETE FROM TABLE sqlite_sequence'
                     sql_2 += f' WHERE name = "{ table_name }"'
                     self.__cur.execute(sql_2)
+                    self.__con.commit()
             except:
                 pass
             return True
         return False
 
-    def add_data(self, table_name : str, data : dict):
+    def add_data(self, table_name : str, data : dict) -> bool:
         try:
             sql = f'INSERT INTO "{ table_name }" ('
 
@@ -131,8 +133,9 @@ class SQLITE_DB:
         except:
             return False
 
-    def get_data(self, table_name : str, where : str = '', limit : int = 0):
+    def get_data(self, table_name : str, where : str = '', limit : int = 0, order : str = ''):
         sql = f'SELECT * FROM "{ table_name }"'
+        sql += f' { order }' if order != '' else ''
         sql += f' WHERE { where }' if where != '' else ''
         sql += f' LIMIT { str(limit) }' if limit != 0 else ''
 
