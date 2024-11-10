@@ -1,24 +1,22 @@
 import __init__
 from abs.model import Model
 
-class LangsModel(Model):
-  table_name = 'langs'
-  pk = 'lang_id'
+class TodosModel(Model):
+  table_name = 'hex_todo'
+  pk = 'todo_id'
   columes = [
     {
-      'n': 'lang_id',
+      'n': 'todo_id',
       't': 'INTEGER',
       'l': False,
       'pk': True,
       'au': True
     },
     {
-      'n': 'lang_name',
+      'n': 'todo',
       't': 'TEXT',
-      'l': False,
-      'pk': False,
-      'au': False
-    },
+      'l': False
+    }
   ]
 
   

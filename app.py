@@ -4,6 +4,7 @@ from abs.model import Model
 
 from models.langs import LangsModel
 from models.users import UsersModel
+from models.todos import TodosModel
 
 SQL = SQLITE_DB({
     "path": config.database_path
@@ -11,7 +12,7 @@ SQL = SQLITE_DB({
 
 print('=' * 30)
 
-print(UsersModel.create_table())
+# print(UsersModel.create_table())
 
 # print(LangsModel.delete_table())
 # print(LangsModel.create_table())
@@ -37,8 +38,25 @@ print(UsersModel.create_table())
 # print(LangsModel.delete_data('"lang_name" = "Arabic"'))
 
 # print(LangsModel.get_data())
-print(LangsModel.get_last_pk())
+# print(LangsModel.get_last_pk())
 
-# class users(Model):
-#   table_name = 'users'
-#   pk = 'user_id'
+# print(TodosModel.create_table())
+
+print("your todos is :")
+for todo in TodosModel.get_data():
+    print(todo['todo'])
+
+ttt = input(f"\ncreate a new todo:\n")
+
+TodosModel.add_data({
+    'todo': ttt
+})
+
+print(" ")
+print("=" * 30)
+print(" ")
+
+print("your todos is :")
+for todo in TodosModel.get_data():
+    print(todo['todo'])
+

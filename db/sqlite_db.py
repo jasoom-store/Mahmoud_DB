@@ -21,7 +21,7 @@ class SQLITE_DB:
             # primary_key = False
             # auto_inc = False
             
-            items = ["n", "t", "l", "pk", "au"]
+            items = ["n", "t", "l"]
             for colume in columes:
                 if type(colume) != dict:
                     for l in items:
@@ -32,8 +32,8 @@ class SQLITE_DB:
             for colume in columes:
                 sql += '"'+ colume["n"] +'" '+ colume["t"]
                 sql += ' NULL' if colume["l"] else ' NOT NULL'
-                sql += ' PRIMARY KEY' if colume["pk"] else ''
-                sql += ' AUTOINCREMENT' if colume["au"] else ''
+                sql += ' PRIMARY KEY' if 'pk' in colume and colume["pk"] else ''
+                sql += ' AUTOINCREMENT' if 'au' in colume and colume["au"] else ''
                 sql += ', '
                 # if colume['pk']:
                 #     primary_key = colume["n"]
