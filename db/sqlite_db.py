@@ -2,7 +2,10 @@ import sqlite3
 
 class SQLITE_DB:
     def __init__(self, database : dict) -> None:
-        self.__con = sqlite3.connect(database["path"])
+        self.__con = sqlite3.connect(
+            database["path"],
+            check_same_thread = False
+        )
         self.__cur = self.__con.cursor()
 
     def table_exists(self, table_name : str) -> bool:

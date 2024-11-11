@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Home page</title>
+
+  <!-- For mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    table {
+      width: 100%;
+    }
+    table, td {
+      border: 1px solid black;
+    }
+    thead {
+      text-transform: uppercase;
+      font-weight: bold;
+      background-color: brown;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <table>
+    <thead>
+      <tr>
+        <td>id</td>
+        <td>val</td>
+        <td>btns</td>
+      </tr>
+    </thead>
+    {% for todo in todos %}
+    <tr>
+      <td>{{ todo['todo_id'] }}</td>
+      <td>{{ todo['todo'] }}</td>
+      <td>
+        <a href="/update_todo/{{ todo['todo_id'] }}">Edit</a>
+        <button onclick="if (confirm('Are you sure?')) { window.location.href = `/delete_todo/{{ todo['todo_id'] }}` }">Delete</button>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <form action="/make_todo" method="post">
+    <input type="text" name="make_todo">
+    <input type="submit" value="save">
+  </form>
+
+  <a href="/delete_all">Delete all todos</a>
+
+</body>
+</html>

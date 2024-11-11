@@ -1,62 +1,63 @@
+import sqlite3
+
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect
+)
+
 from config import config
-from db.sqlite_db import SQLITE_DB
-from abs.model import Model
 
 from models.langs import LangsModel
 from models.users import UsersModel
 from models.todos import TodosModel
 
-SQL = SQLITE_DB({
-    "path": config.database_path
-})
+app = Flask(__name__)
 
-print('=' * 30)
+@app.route("/")
+def home():
+    return render_template(
+        'home.html',
+        todos = TodosModel.get_data()
+    )
 
-# print(UsersModel.create_table())
+@app.route("/make_todo", methods=['POST'])
+def make_todo():
+    if 'make_todo' in request.form:
+        TodosModel.add_data({
+            'todo': request.form['make_todo']
+        })
+        return redirect('/')
 
-# print(LangsModel.delete_table())
-# print(LangsModel.create_table())
-# print(LangsModel.add_data({
-#     # 'lang_id': 1,
-#     'lang_name': 'Arabic',
-# }))
+@app.route("/update_todo/<int:id>", methods=['POST', 'GET'])
+def update_todo(id):
+    if request.method == 'POST':
+        TodosModel.update_data({
+            'todo': request.form['update_todo']
+        }, id)
+        return redirect('/')
+    if request.method == 'GET':
+        return render_template(
+            'update.html',
+            todo = TodosModel.get_data_by_pk(id)
+        )
+    
+@app.route("/delete_todo/<int:id>")
+def delete_todo(id):
+    TodosModel.delete_data(f'"todo_id" = { id }')
+    return redirect('/')
 
-# print(LangsModel.add_data({
-#     'lang_id': 3,
-#     'lang_name': 'Frensh',
-# }))
+@app.route("/delete_all")
+def delete_all():
+    TodosModel.delete_data()
+    return redirect('/')
 
-# print(LangsModel.add_data({
-#     'lang_id': 2,
-#     'lang_name': 'English',
-# }))
 
-# print(LangsModel.update_data({
-#     'lang_name': 'Englishaaaaaaaa',
-# }, 2))
+if __name__ == '__main__':
+    app.run(
+        debug = True,
+        port = 80
+    )
 
-# print(LangsModel.delete_data('"lang_name" = "Arabic"'))
-
-# print(LangsModel.get_data())
-# print(LangsModel.get_last_pk())
-
-# print(TodosModel.create_table())
-
-print("your todos is :")
-for todo in TodosModel.get_data():
-    print(todo['todo'])
-
-ttt = input(f"\ncreate a new todo:\n")
-
-TodosModel.add_data({
-    'todo': ttt
-})
-
-print(" ")
-print("=" * 30)
-print(" ")
-
-print("your todos is :")
-for todo in TodosModel.get_data():
-    print(todo['todo'])
-
+# print(TodosModel.get_data())
