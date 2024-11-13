@@ -1,26 +1,21 @@
 import sqlite3
 
-from flask import (
-    Flask,
-    render_template,
-    request,
-    redirect
-)
+from flask import *
 
-from config import config
-
-from models.langs import LangsModel
-from models.users import UsersModel
 from models.todos import TodosModel
+
+from views.home import home
+from views.api import api
 
 app = Flask(__name__)
 
+home.register_blueprint(api, url_prefix='/API')
+
+app.register_blueprint(home, url_prefix="/<string:lang>")
+
 @app.route("/")
-def home():
-    return render_template(
-        'home.html',
-        todos = TodosModel.get_data()
-    )
+def home_page():
+    return redirect('/AR')
 
 @app.route("/make_todo", methods=['POST'])
 def make_todo():

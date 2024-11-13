@@ -1,4 +1,3 @@
-import __init__
 from abs.model import Model
 
 class TodosModel(Model):

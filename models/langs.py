@@ -1,4 +1,3 @@
-import __init__
 from abs.model import Model
 
 class LangsModel(Model):
@@ -14,6 +13,13 @@ class LangsModel(Model):
     },
     {
       'n': 'lang_name',
+      't': 'TEXT',
+      'l': False,
+      'pk': False,
+      'au': False
+    },
+    {
+      'n': 'lang_short',
       't': 'TEXT',
       'l': False,
       'pk': False,

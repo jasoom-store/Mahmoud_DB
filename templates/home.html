@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang.lower() }}">
 <head>
   <meta charset="UTF-8">
   <title>Home page</title>
@@ -27,9 +27,9 @@
   <table>
     <thead>
       <tr>
-        <td>id</td>
-        <td>val</td>
-        <td>btns</td>
+        <td>{{ words[lang]['id'] }}</td>
+        <td>{{ words[lang]['val'] }}</td>
+        <td>{{ words[lang]['btns'] }}</td>
       </tr>
     </thead>
     {% for todo in todos %}
@@ -50,6 +50,13 @@
   </form>
 
   <a href="/delete_all">Delete all todos</a>
+
+  {% if lang %}
+  <h1>{{ lang }}</h1>
+  {% endif %}
+
+  <div><a href="/AR">العربية</a></div>
+  <div><a href="/EN">English</a></div>
 
 </body>
 </html>
