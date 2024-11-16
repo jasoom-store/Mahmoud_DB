@@ -4,18 +4,32 @@ from flask import *
 
 from models.todos import TodosModel
 
-from views.home import home
-from views.api import api
+from controllers.home import home
+from controllers.api import api
+from controllers.about import about
+from controllers.contact import contact
 
-app = Flask(__name__)
+from controllers.dashboard.home import dashboard_home
+from controllers.dashboard.update import dashboard_update
 
+app = Flask(__name__, template_folder='views')
+
+# Main pages
+home.register_blueprint(contact, url_prefix='/Contact')
+home.register_blueprint(about, url_prefix='/About')
 home.register_blueprint(api, url_prefix='/API')
-
 app.register_blueprint(home, url_prefix="/<string:lang>")
+
+# Dashboard
+dashboard_home.register_blueprint(dashboard_update, url_prefix='/Update')
+app.register_blueprint(dashboard_home, url_prefix='/Dashboard')
+
 
 @app.route("/")
 def home_page():
     return redirect('/AR')
+
+#############################################################
 
 @app.route("/make_todo", methods=['POST'])
 def make_todo():

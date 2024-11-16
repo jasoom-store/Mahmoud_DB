@@ -36,13 +36,13 @@ class SiteWordsModel(Model):
 
   @classmethod
   def get_by_key(cls, key : str, lang: int):
-    res = cls.con.get_data(
-      cls.table_name,
-      f'"word_key" = "{key}" AND "lang_id" = {str(lang)}'
-    )
-
-    if res:
+    try:
+        res = cls.con.get_data(
+            cls.table_name,
+            f'"word_key" = "{key}" AND "lang_id" = {str(lang)}'
+        )
         return res[0]['word']
-    return False
+    except:
+        return False
 
   

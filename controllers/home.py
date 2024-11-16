@@ -10,6 +10,19 @@ home = Blueprint('home', __name__)
 words = {}
 language = LangsModel.get_data()
 
+# {
+#     'AR': {
+#         'id': 'م',
+#         'val': 'بيان',
+#         'btns': 'ازرار',
+#     },
+#     'EN': {
+#         'id': 'id',
+#         'val': 'value',
+#         'btns': 'btns',
+#     }
+# }
+
 if bool(language):
     for langu in language:
         # words[langu['lang_short']] = langu['lang_short']
