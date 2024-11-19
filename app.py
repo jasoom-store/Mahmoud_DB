@@ -29,6 +29,11 @@ app.register_blueprint(dashboard_home, url_prefix='/Dashboard')
 def home_page():
     return redirect('/AR')
 
+@app.errorhandler(404)
+@app.errorhandler(405)
+def not_found(e):
+    return f"<h1>ERROR: { str(e)[:3] } page</h1>", 404
+
 #############################################################
 
 @app.route("/make_todo", methods=['POST'])

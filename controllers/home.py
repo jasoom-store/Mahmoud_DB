@@ -45,6 +45,9 @@ def home_page_by_lang(lang):
             'home.html',
             todos = TodosModel.get_data(),
             lang = lang,
-            words = words
+            words = words,
+            un = '',
+            ps = '',
+            err = ''
         )
     abort(404)

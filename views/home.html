@@ -20,6 +20,17 @@
       background-color: brown;
       color: white;
     }
+
+    form {
+      border: 1px solid black;
+      text-align: center
+    }
+    form div {
+      padding: 10px 0;
+    }
+    h1 {
+      text-align: center
+    }
   </style>
 
   <link rel="stylesheet" href="/static/css/test.css">
@@ -27,7 +38,46 @@
 </head>
 <body>
 
-  <table>
+  <h1>Signup</h1>
+
+  <form action="/{{ lang }}/API/" method="post">
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" name="signup_username" id="username">
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" name="signup_password" id="password">
+    </div>
+    <div>
+      <label for="repassword">Repeat Password:</label>
+      <input type="password" name="signup_repassword" id="repassword">
+    </div>
+    <div>
+      <input type="submit" value="Signup">
+    </div>
+  </form>
+
+  <h1>Signin</h1>
+
+  <form action="/{{ lang }}/API/" method="post">
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" name="signin_username" id="username" value="{{un}}">
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" name="signin_password" id="password" value="{{ps}}">
+    </div>
+    <div>
+      <input type="submit" value="Signin">
+    </div>
+    <div style="color: red;">
+      {{ err }}
+    </div>
+  </form>
+
+  <!-- <table>
     <thead>
       <tr>
         <td>{{ words[lang]['id'] }}</td>
@@ -56,7 +106,7 @@
 
   {% if lang %}
   <h1>{{ lang }}</h1>
-  {% endif %}
+  {% endif %} -->
 
   <div><a href="/AR">العربية</a></div>
   <div><a href="/EN">English</a></div>

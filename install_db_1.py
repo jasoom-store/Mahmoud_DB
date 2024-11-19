@@ -1,5 +1,7 @@
 from models.langs import LangsModel
 from models.site_words import SiteWordsModel
+from models.users import UsersModel
+from models.todos import TodosModel
 
 print('=' * 30)
 print(' ')
@@ -55,6 +57,23 @@ for n in list_data:
   data += str(SiteWordsModel.add_data(n)) + ', '
 
 print(data[:-2])
+
+
+print(' ')
+print('=' * 30)
+print(' ')
+
+table = 'Todos'
+print(f'Delete Table { table } is: '+ str(TodosModel.delete_table()))
+print(f'Create Table { table } is: '+ str(TodosModel.create_table()))
+
+print(' ')
+print('=' * 30)
+print(' ')
+
+table = 'Users'
+print(f'Delete Table { table } is: '+ str(UsersModel.delete_table()))
+print(f'Create Table { table } is: '+ str(UsersModel.create_table()))
 
 print(' ')
 print('=' * 30)

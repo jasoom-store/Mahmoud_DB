@@ -1,7 +1,8 @@
 from abs.model import Model
+from config import hex
 
 class UsersModel(Model):
-  table_name = 'users'
+  table_name = f'{hex.hex_tables}_users'
   pk = 'user_id'
   columes = [
     {
@@ -14,15 +15,11 @@ class UsersModel(Model):
     {
       'n': 'username',
       't': 'TEXT',
-      'l': False,
-      'pk': False,
-      'au': False
+      'l': False
     },
     {
       'n': 'password',
       't': 'TEXT',
-      'l': False,
-      'pk': False,
-      'au': False
+      'l': False
     },
   ]
