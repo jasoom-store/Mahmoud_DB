@@ -1,6 +1,13 @@
-from flask import Blueprint, render_template, abort, redirect, request
+from datetime import datetime, timedelta
+
+from flask import Blueprint, render_template, abort, redirect, request, make_response
+
+import pytz
 
 from config import vars
+
+from lib.encrypt import DataEncrypt
+
 from models.langs import LangsModel
 from models.todos import TodosModel
 from models.site_words import SiteWordsModel
@@ -42,7 +49,7 @@ def api_page(lang):
                 if request.form['signup_password'] == request.form['signup_repassword']:
                     UsersModel.add_data({
                         'username': request.form['signup_username'],
-                        'password': request.form['signup_password']
+                        'password': DataEncrypt.encrypt(request.form['signup_password'])
                     })
                     # login
                 return redirect('/')
@@ -53,9 +60,36 @@ def api_page(lang):
                 logedin = False
                 for user in users:
                     if (request.form['signin_username'] == user['username']
-                        and request.form['signin_password'] == user['password']):
+                        and request.form['signin_password'] == DataEncrypt.decrypt(user['password'])):
                         logedin = True
-                        return 'logined'
+                        # return 'logined'
+                        resp = make_response(
+                            redirect(request.form['signin_url'])
+                        )
+
+                        now = datetime.now(pytz.timezone('Africa/Cairo'))
+                        after = timedelta(days = 3 * 365)
+
+                        resp.set_cookie(
+                            'LOGIN',
+                            request.form['signin_username'],
+                            # 10 * 60 * 60 * 24,
+                            None,
+                            # datetime(
+                            #     2025, 6, 10, 14, 30, 2, 100,
+                            #     tzinfo=pytz.timezone('Africa/Cairo')
+                            # )
+                            now + after
+                            # None, # max_age
+                            # now + after, # expires
+                            # '/', # path
+                            # None, # domain
+                            # None, # secure
+                            # False, # httponly
+                        )
+
+                        return resp
+
                 if not logedin:
                     return render_template(
                         'home.html',

@@ -34,6 +34,18 @@ def home_page():
 def not_found(e):
     return f"<h1>ERROR: { str(e)[:3] } page</h1>", 404
 
+
+@app.route("/cookie")
+def cookie_page():
+    resp = make_response(
+        render_template('home.html', lang= 'AR')
+    )
+
+    resp.set_cookie('session','8943yrfgusdfy83vfbu')
+
+    return resp
+    # return 'Setting the cookie'
+
 #############################################################
 
 @app.route("/make_todo", methods=['POST'])

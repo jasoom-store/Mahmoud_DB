@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, abort
+from flask import Blueprint, render_template, abort, request
 
 from config import vars
 from models.langs import LangsModel
@@ -41,6 +41,12 @@ if bool(language):
 @home.route("/")
 def home_page_by_lang(lang):
     if lang in vars.list_langs:
+        
+        try:
+            cookie = request.cookies.get('LOGIN')
+        except:
+            cookie = False
+
         return render_template(
             'home.html',
             todos = TodosModel.get_data(),
@@ -48,6 +54,8 @@ def home_page_by_lang(lang):
             words = words,
             un = '',
             ps = '',
-            err = ''
+            err = '',
+            cookie = cookie,
+            url = request.url
         )
     abort(404)
