@@ -8,17 +8,20 @@ from controllers.home import home
 from controllers.api import api
 from controllers.about import about
 from controllers.contact import contact
+from controllers.update import update_todo
 
 from controllers.dashboard.home import dashboard_home
 from controllers.dashboard.update import dashboard_update
 
 app = Flask(__name__, template_folder='views')
 
-# Main pages
+# Main 
 home.register_blueprint(contact, url_prefix='/Contact')
 home.register_blueprint(about, url_prefix='/About')
 home.register_blueprint(api, url_prefix='/API')
 app.register_blueprint(home, url_prefix="/<string:lang>")
+
+app.register_blueprint(update_todo)
 
 # Dashboard
 dashboard_home.register_blueprint(dashboard_update, url_prefix='/Update')
@@ -34,49 +37,23 @@ def home_page():
 def not_found(e):
     return f"<h1>ERROR: { str(e)[:3] } page</h1>", 404
 
-
-@app.route("/cookie")
-def cookie_page():
-    resp = make_response(
-        render_template('home.html', lang= 'AR')
-    )
-
-    resp.set_cookie('session','8943yrfgusdfy83vfbu')
-
-    return resp
-    # return 'Setting the cookie'
-
 #############################################################
 
 @app.route("/make_todo", methods=['POST'])
 def make_todo():
-    if 'make_todo' in request.form:
+    if ('make_todo' in request.form
+        and 'user_id' in request.form):
         TodosModel.add_data({
-            'todo': request.form['make_todo']
+            'todo': request.form['make_todo'],
+            'user_id': int(request.form['user_id'])
         })
         return redirect('/')
+    return 'Not pass'
 
-@app.route("/update_todo/<int:id>", methods=['POST', 'GET'])
-def update_todo(id):
-    if request.method == 'POST':
-        TodosModel.update_data({
-            'todo': request.form['update_todo']
-        }, id)
-        return redirect('/')
-    if request.method == 'GET':
-        return render_template(
-            'update.html',
-            todo = TodosModel.get_data_by_pk(id)
-        )
-    
-@app.route("/delete_todo/<int:id>")
-def delete_todo(id):
-    TodosModel.delete_data(f'"todo_id" = { id }')
-    return redirect('/')
 
-@app.route("/delete_all")
-def delete_all():
-    TodosModel.delete_data()
+@app.route("/delete_all/<int:user_id>")
+def delete_all(user_id):
+    TodosModel.delete_data('"user_id" = '+ user_id)
     return redirect('/')
 
 
@@ -85,5 +62,3 @@ if __name__ == '__main__':
         debug = True,
         port = 80
     )
-
-# print(TodosModel.get_data())

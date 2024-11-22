@@ -23,7 +23,12 @@
 
     form {
       border: 1px solid black;
-      text-align: center
+      text-align: center;
+      
+      {% if cookie %}
+      display: inline-block;
+      border: none;
+      {% endif %}
     }
     form div {
       padding: 10px 0;
@@ -83,9 +88,17 @@
   </form>
   {% else %}
   <h1>Welcome {{ cookie }}</h1>
-  {% endif %}
 
-  <!-- <table>
+  <form action="/{{ lang }}/API/" method="post">
+    <div style="display: none;">
+      <input type="text" name="logout_url" value="{{url}}">
+    </div>
+    <div>
+      <input type="submit" value="Logout">
+    </div>
+  </form>
+
+  <table>
     <thead>
       <tr>
         <td>{{ words[lang]['id'] }}</td>
@@ -95,11 +108,15 @@
     </thead>
     {% for todo in todos %}
     <tr>
-      <td>{{ todo['todo_id'] }}</td>
+      <td>{{ loop.index }}</td>
       <td>{{ todo['todo'] }}</td>
       <td>
         <a href="/update_todo/{{ todo['todo_id'] }}">Edit</a>
-        <button onclick="if (confirm('Are you sure?')) { window.location.href = `/delete_todo/{{ todo['todo_id'] }}` }">Delete</button>
+
+        <form action="/{{ lang }}/API/" method="post">
+          <input hidden type="number" name="delete_todo" value="{{ todo['todo_id'] }}">
+          <input onclick="if (!confirm('Are you sure?')) { event.preventDefault() }" type="submit" value="Delete">
+        </form>
       </td>
     </tr>
     {% endfor %}
@@ -107,10 +124,17 @@
 
   <form action="/make_todo" method="post">
     <input type="text" name="make_todo">
+    <input hidden type="number" name="user_id" value="{{ user['user_id'] }}">
     <input type="submit" value="save">
   </form>
 
-  <a href="/delete_all">Delete all todos</a>
+  <a href="/delete_all/{{ user['user_id'] }}">Delete all todos</a>
+  {% endif %}
+
+  <!-- 
+
+
+  
 
   {% if lang %}
   <h1>{{ lang }}</h1>

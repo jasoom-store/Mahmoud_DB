@@ -23,3 +23,14 @@ class UsersModel(Model):
       'l': False
     },
   ]
+
+  @classmethod
+  def get_by_username(cls, username : str):
+    try:
+      res = cls.con.get_data(
+        cls.table_name,
+        f'"username" = "{ username }"'
+      )
+      return res[0]
+    except:
+      return False

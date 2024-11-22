@@ -42,6 +42,19 @@ def api_page(lang):
                     'todo': request.form['update_todo']
                 }, id)
                 return redirect('/')
+            # Logout
+            if 'logout_url' in request.form:
+                resp = make_response(
+                    redirect(request.form['logout_url'])
+                )
+
+                resp.set_cookie(
+                    'LOGIN',
+                    '',
+                    None
+                )
+
+                return resp
             # Singup
             if ('signup_username' in request.form
                 and 'signup_password' in request.form
@@ -72,20 +85,18 @@ def api_page(lang):
 
                         resp.set_cookie(
                             'LOGIN',
-                            request.form['signin_username'],
-                            # 10 * 60 * 60 * 24,
-                            None,
+                            DataEncrypt.encrypt(request.form['signin_username']),
+                            # 10 * 60 * 60 * 24, # max_age
+                            None, # max_age
                             # datetime(
                             #     2025, 6, 10, 14, 30, 2, 100,
-                            #     tzinfo=pytz.timezone('Africa/Cairo')
+                            #     tzinfo=pytz.timezone('Africa/Cairo') # expires
                             # )
-                            now + after
-                            # None, # max_age
-                            # now + after, # expires
-                            # '/', # path
-                            # None, # domain
-                            # None, # secure
-                            # False, # httponly
+                            now + after, # expires
+                            '/', # path
+                            request.host, # domain
+                            None, # secure
+                            False # httponly
                         )
 
                         return resp
@@ -100,5 +111,12 @@ def api_page(lang):
                         ps = request.form['signin_password'],
                         err = 'bad values'
                     )
+            # Delete Todo
+            if 'delete_todo' in request.form:
+                TodosModel.delete_data(
+                    '"todo_id" = '+ request.form['delete_todo']
+                )
+                return redirect('/')
+        
                     
     abort(404)
