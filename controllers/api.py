@@ -8,10 +8,19 @@ from config import vars
 
 from lib.encrypt import DataEncrypt
 
-from models.langs import LangsModel
+# todos
 from models.todos import TodosModel
+
+# site
+from models.langs import LangsModel
 from models.site_words import SiteWordsModel
+
+# users
 from models.users import UsersModel
+from models.profile import UserProfileModel
+
+# phone number
+from models.phone_number import PhoneNumberModel
 
 words = {}
 language = LangsModel.get_data()
@@ -58,49 +67,71 @@ def api_page(lang):
             # Singup
             if ('signup_username' in request.form
                 and 'signup_password' in request.form
-                and 'signup_repassword' in request.form):
+                and 'signup_repassword' in request.form
+                and 'first_name' in request.form
+                and 'last_name' in request.form
+                and 'gender' in request.form
+                and 'date_of_birth' in request.form
+                and 'profile_img' in request.form):
                 if request.form['signup_password'] == request.form['signup_repassword']:
                     UsersModel.add_data({
                         'username': request.form['signup_username'],
                         'password': DataEncrypt.encrypt(request.form['signup_password'])
+                    })
+                    UserProfileModel.add_data({
+                        'first_name': request.form['first_name'],
+                        'last_name': request.form['last_name'],
+                        'gender': request.form['gender'],
+                        'date_of_birth': request.form['date_of_birth'],
+                        'profile_img':request.form['signup_username'] +'.jpg' 
                     })
                     # login
                 return redirect('/')
             # Singin
             if ('signin_username' in request.form
                 and 'signin_password' in request.form):
+
                 users = UsersModel.get_data()
                 logedin = False
+                err_mess = ''
+
                 for user in users:
-                    if (request.form['signin_username'] == user['username']
-                        and request.form['signin_password'] == DataEncrypt.decrypt(user['password'])):
-                        logedin = True
-                        # return 'logined'
-                        resp = make_response(
-                            redirect(request.form['signin_url'])
-                        )
+                    if request.form['signin_username'] == user['username']:
+                        if request.form['signin_password'] == DataEncrypt.decrypt(user['password']):
+                            # login
+                            logedin = True
+                            resp = make_response(
+                                redirect(request.form['signin_url'])
+                            )
 
-                        now = datetime.now(pytz.timezone('Africa/Cairo'))
-                        after = timedelta(days = 3 * 365)
+                            now = datetime.now(pytz.timezone('Africa/Cairo'))
+                            after = timedelta(days = 3 * 365)
 
-                        resp.set_cookie(
-                            'LOGIN',
-                            DataEncrypt.encrypt(request.form['signin_username']),
-                            # 10 * 60 * 60 * 24, # max_age
-                            None, # max_age
-                            # datetime(
-                            #     2025, 6, 10, 14, 30, 2, 100,
-                            #     tzinfo=pytz.timezone('Africa/Cairo') # expires
-                            # )
-                            now + after, # expires
-                            '/', # path
-                            request.host, # domain
-                            None, # secure
-                            False # httponly
-                        )
+                            resp.set_cookie(
+                                'LOGIN',
+                                DataEncrypt.encrypt(request.form['signin_username']),
+                                # 10 * 60 * 60 * 24, # max_age
+                                None, # max_age
+                                # datetime(
+                                #     2025, 6, 10, 14, 30, 2, 100,
+                                #     tzinfo=pytz.timezone('Africa/Cairo') # expires
+                                # )
+                                now + after, # expires
+                                '/', # path
+                                request.host, # domain
+                                None, # secure
+                                False # httponly
+                            )
 
-                        return resp
-
+                            return resp
+                            # break
+                        else:
+                            # password wrong
+                            err_mess = 'password wrong'
+                    else:
+                        # username wrong
+                        err_mess = 'username wrong'
+                    
                 if not logedin:
                     return render_template(
                         'home.html',
@@ -109,7 +140,7 @@ def api_page(lang):
                         words = words,
                         un = request.form['signin_username'],
                         ps = request.form['signin_password'],
-                        err = 'bad values'
+                        err = err_mess
                     )
             # Delete Todo
             if 'delete_todo' in request.form:
@@ -118,5 +149,32 @@ def api_page(lang):
                 )
                 return redirect('/')
         
-                    
+            # add data for phone number
+            if ('phone_number' in request.form
+                and 'country_code' in request.form
+                and 'phone_type' in request.form
+                and 'user_id' in request.form
+                and 'phone_url' in request.form):
+
+                # print('=' * 30)
+
+                # print(request.form['country_code'])
+
+                # print('=' * 30)
+
+                # return 'good'
+
+                PhoneNumberModel.add_data({
+                    'phone_number': request.form['phone_number'],
+                    'country_code': request.form['country_code'] ,
+                    'phone_type': request.form['phone_type'],
+                    'user_id': request.form['user_id']
+                })
+
+                # Have an error => where username must send it from profile page
+                # return redirect(url_for('home.profile.profile_page', lang = lang, username = username))
+                return redirect(request.form['phone_url'])
     abort(404)
+
+                
+

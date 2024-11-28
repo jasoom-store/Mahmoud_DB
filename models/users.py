@@ -27,10 +27,8 @@ class UsersModel(Model):
   @classmethod
   def get_by_username(cls, username : str):
     try:
-      res = cls.con.get_data(
-        cls.table_name,
+      return cls.get_data_one(
         f'"username" = "{ username }"'
       )
-      return res[0]
     except:
       return False

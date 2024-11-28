@@ -1,7 +1,14 @@
+# Site
 from models.langs import LangsModel
 from models.site_words import SiteWordsModel
-from models.users import UsersModel
+
+# Todos
 from models.todos import TodosModel
+
+# Users
+from models.users import UsersModel
+from models.profile import UserProfileModel
+from models.phone_number import PhoneNumberModel
 
 print('=' * 30)
 print(' ')
@@ -74,6 +81,22 @@ print(' ')
 table = 'Users'
 print(f'Delete Table { table } is: '+ str(UsersModel.delete_table()))
 print(f'Create Table { table } is: '+ str(UsersModel.create_table()))
+
+print(' ')
+print('=' * 30)
+print(' ')
+
+table = 'User Profile'
+print(f'Delete Table { table } is: '+ str(UserProfileModel.delete_table()))
+print(f'Create Table { table } is: '+ str(UserProfileModel.create_table()))
+
+print(' ')
+print('=' * 30)
+print(' ')
+
+table = 'Phone Number'
+print(f'Delete Table { table } is: '+ str(PhoneNumberModel.delete_table()))
+print(f'Create Table { table } is: '+ str(PhoneNumberModel.create_table()))
 
 print(' ')
 print('=' * 30)

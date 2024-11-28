@@ -1,13 +1,26 @@
-from models.todos import TodosModel
+test = 't'
+
+print('t' == test)
+
+# print(test)
+
+# con = test = 'r'
+
+# print(con)
+
+# print(test)
+
+# print(test == 'r')
+
+# print(test != 'r')
+
+# print(test != 'r')
+
+# if test = 't':
+#   print(test)
 
 
-
-print(TodosModel.add_data({
-    'todo': 'asdjkfbsdjhvcuhasdv',
-    'user_id': 4
-}))
-
-
-
-
-
+if 't' == test:
+  err = False
+  if (not err):
+    print('good')

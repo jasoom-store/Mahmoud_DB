@@ -170,9 +170,9 @@ class SQLITE_DB:
 
         return list_of_data
 
-    def get_data_by_pk(self, table_name : str, pk : str, pk_val : int):
+    def get_data_one(self, table_name : str, where : str):
         sql = f'SELECT * FROM "{ table_name }"'
-        sql += f' WHERE "{ pk }" = { pk_val }'
+        sql += f' WHERE { where }'
 
         data = self.__cur.execute(sql)
         # return data.fetchall()

@@ -29,9 +29,6 @@ class Model:
 
   @classmethod
   def delete_data(cls, where : str = ''):
-    '''
-    fffffff
-    '''
     return cls.con.delete_data(cls.table_name, where)
 
   @classmethod
@@ -55,5 +52,12 @@ class Model:
 
   @classmethod
   def get_data_by_pk(cls, pk_val : int):
-    return cls.con.get_data_by_pk(cls.table_name, cls.pk, pk_val)
-
+    return cls.con.get_data_one(
+      cls.table_name,
+      f'"{ cls.pk }" = { str(pk_val) }'
+    )
+  
+  @classmethod
+  def get_data_one(cls, where : str):
+    return cls.con.get_data_one(cls.table_name, where)
+  

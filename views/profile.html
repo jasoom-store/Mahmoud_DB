@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile page</title>
+</head>
+<body>
+    <h2>profile page</h2>
+
+    <h1>welcome {{ username }}</h1>
+    <h2>language {{lang}}</h2>
+    <h3> user data {{user}}</h3>
+     
+    {% if iam %}
+
+    <h2>iam</h2>
+
+    {% for phone in phones %}
+    <form action="/{{ lang }}/API/" method="post">
+        <div>
+            <label for="phone_number">phone number</label><br>
+            <input type="number" name="update_phone_number" id="phone_number" value="{{ phone['phone_number'] }}">
+        </div>
+        <div>
+            <label for="country_code">country code</label><br>
+            {% set countries = [{'cun': 'EG', 'val': '+20'}, {'cun': 'KSA', 'val': '+966'}, {'cun': 'MM', 'val': '+55'}] %}
+            <select name="update_country_code" id="country_code">
+                {% for con in countries %}
+                <option value="{{ con.val }}" {{ 'selected' if phone['country_code'] == con.val else '' }}>{{ con.cun }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="phone_type">phone type</label><br>
+            {% set listsss = ['whatsapp', 'snapchat', 'call', 'tellegram'] %}
+            <select name="update_phone_type" id="phone_type">
+                {% for t in listsss %}
+                <option value="{{ t }}" {{ 'selected' if phone['phone_type'] == t else '' }}>{{ t }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div style="display: none;">
+            <input type="text" name="update_phone_url" value="/{{ lang }}/Profile/{{ username }}/">
+        </div>
+        <div style="display: none;">
+            <input type="text" name="update_user_id" value="{{ user['user_id'] }}">
+        </div>
+        <div>
+            <input type="submit" value="save">
+        </div>
+    </form>
+    <h3>{{ phone.phone_type }}: {{ phone['phone_number'] }}</h3>
+    {% endfor %}
+
+    <!-- ================================================ -->
+
+    <form action="/{{ lang }}/API/" method="post">
+        <div>
+            <label for="phone_number">phone number</label><br>
+            <input type="number" name="phone_number" id="phone_number">
+        </div>
+        <div>
+            <label for="country_code">country code</label><br>
+            <select name="country_code" id="country_code">
+                <option value="+20">Egypt</option>
+                <option value="+966">KSA</option>
+            </select>
+        </div>
+        <div>
+            <label for="phone_type">phone type</label><br>
+            <select name="phone_type" id="phone_type">
+                <option value="whatsapp">whatsapp</option>
+                <option value="snapchat">snapchat</option>
+                <option value="call">call</option>
+                <option value="tellegram">tellegram</option>
+            </select>
+        </div>
+        <div style="display: none;">
+            <!-- <input type="text" name="phone_url" value="/{{ lang }}/Profile/{{ username }}/"> -->
+            <input type="text" name="phone_url" value="{{ url_for('home.profile.profile_page', lang = lang, username = username) }}">
+        </div>
+        <div style="display: none;">
+            <input type="text" name="user_id" value="{{ user['user_id'] }}">
+        </div>
+        <div>
+            <input type="submit" value="save">
+        </div>
+    </form>
+
+    <a href="#">Edite First Name</a>
+
+    {% else %}
+
+    <h2>not iam</h2>
+
+    {% for phone in phones %}
+    <h3>{{ phone.phone_type }}: {{ phone['phone_number'] }}</h3>
+    {% endfor %}
+    
+    {% endif %}
+</body>
+</html>
